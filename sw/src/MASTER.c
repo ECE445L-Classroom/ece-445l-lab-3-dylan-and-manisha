@@ -1,8 +1,10 @@
-#include "./inc/tm4c123gh6pm.h"
+#include "../inc/tm4c123gh6pm.h"
 #include "../inc/Timer0A.h"
 #include "../inc/Timer2A.h"
 #include "../inc/Timer5A.h"
 #include "MASTER.h"
+#include "../inc/ST7735.h"
+
 
 uint16_t curr_time[3];
 uint16_t set_time[3];
@@ -39,13 +41,13 @@ void TickTock_ISR(){
 	// tick tock from 00:00:00 to 24:00:00
 	curr_time[SS]++;
 	if (curr_time[SS] == 60) {
-		curr_time[SS] %= 60;
+		curr_time[SS] = 0;
 		curr_time[MM]++;
 		if (curr_time[MM] == 60) {
-			curr_time[MM] %= 60;
+			curr_time[MM] = 0;
 			curr_time[HH]++;
 			if (curr_time[HH] == 24) {
-				curr_time[HH] %= 24;
+				curr_time[HH] = 0;
 			}
 		}
 	}
@@ -55,13 +57,16 @@ void TickTock_ISR(){
 		ringAlarm = 1;
 		page = WAKE_UP;
 	}
+	
+	ST7735_SetCursor(0, 0);
+	ST7735_OutUDec(curr_time[SS]);
 }
 
 void TickTock_INIT(){
 	// set default time to 00:00:00
 	curr_time[HH] = 0; curr_time[MM] = 0; curr_time[SS] = 0;
 
-	// Dedicate Timer5A to one second time increments "tick tock"
-	Timer5A_Init(&TickTock_ISR, 80000000, 3); // 80 MHz / 80,000,000 = 1 Hz = 1 second increments
+	// Dedicate Timer0A to one second time increments "tick tock"
+	Timer0A_Init(&TickTock_ISR, 80000000, 3); // 80 MHz / 80,000,000 = 1 Hz = 1 second increments
 
 }

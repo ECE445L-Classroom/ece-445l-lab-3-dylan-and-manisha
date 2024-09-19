@@ -20,6 +20,8 @@
  For more information about my classes, my research, and my books, see
  http://users.ece.utexas.edu/~valvano/
  */
+#ifndef __TIMER5INTS_H__ // do not include more than once
+#define __TIMER5INTS_H__
 #include <stdint.h>
 // ***************** Timer5A_Init ****************
 // Activate Timer5 interrupts to run user task periodically
@@ -28,5 +30,6 @@
 //          priority 0 (highest) to 7 (lowest)
 // Outputs: none
 void Timer5A_Init(void(*task)(void), uint32_t period, uint32_t priority);
-
 void Timer5A_Stop(void);
+
+#endif

@@ -19,7 +19,9 @@
 #include "../inc/PLL.h"
 #include "../inc/tm4c123gh6pm.h"
 #include "../inc/Timer0A.h"
+#include "../inc/Timer5A.h"
 #include "Lab3.h"
+#include "MASTER.h"
 
 // ---------- Prototypes   -------------------------
 void DisableInterrupts(void); // Disable interrupts
@@ -40,7 +42,8 @@ void UserTask(void){
 
 int main(void){
   DisableInterrupts();
-  PLL_Init(Bus80MHz);    // bus clock at 80 MHz
+  PLL_Init(Bus80MHz); // bus clock at 80 MHz
+	ST7735_InitR(INITR_REDTAB); // start up LCD with black screen
   
 	volatile uint32_t delay;
 	SYSCTL_RCGCGPIO_R |= 0x02;
@@ -48,7 +51,8 @@ int main(void){
 	GPIO_PORTB_DIR_R |= 0x02;
 	GPIO_PORTB_DEN_R |= 0x02;
 	
-	Timer0A_Init(&UserTask, 181818, 1); // task, period, priority --> 440Hz --> 80MHz / 181818
+	//Timer0A_Init(&UserTask, 181818, 1); // task, period, priority --> 440Hz --> 80MHz / 181818
+	TickTock_INIT();
   EnableInterrupts();
 	
 	
