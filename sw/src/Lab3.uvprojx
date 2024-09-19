@@ -415,6 +415,16 @@
               <FileType>1</FileType>
               <FilePath>.\Switches.c</FilePath>
             </File>
+            <File>
+              <FileName>MASTER.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\MASTER.c</FilePath>
+            </File>
+            <File>
+              <FileName>MASTER.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\MASTER.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
