@@ -13,7 +13,6 @@
 #include <stdint.h>
 #include "../inc/dac.h"
 #include "../inc/tm4c123gh6pm.h"
-#include "Sound.h"
 
 const uint8_t SinWave[64] = {
   32,35,38,41,44,47,49,52,54,56,58,
@@ -36,8 +35,6 @@ uint32_t sinIdx = 0;
 #define NVIC_ST_CURRENT_R (*((volatile uint32_t *)0xE000E018))
 	
 void Sound_Init(void){
-	//initialize digital ouputs
-	DAC_Init();
 	
 	//initialize systick
 	//disable systick during setup
@@ -56,16 +53,7 @@ void Sound_Init(void){
 	NVIC_ST_CTRL_R = 0x07;
 }
 
-// **************Sound_Start*********************
-// Start sound output, and set Systick interrupt period 
-// Sound continues until Sound_Start called again, or Sound_Off is called
-// This function returns right away and sound is produced using a periodic interrupt
-// Input: interrupt period
-//           Units of period to be determined by YOU
-//           Maximum period to be determined by YOU
-//           Minimum period to be determined by YOU
-//         if period equals zero, disable sound output
-// Output: none
+
 void Sound_Start(uint32_t period){
 		//change period from ms to ns so that we can do int division
 		//period *= 1000000; 
@@ -77,15 +65,7 @@ void Sound_Start(uint32_t period){
 		NVIC_ST_CTRL_R = 0x07;
 }
 
-// **************Sound_Voice*********************
-// Change voice
-// EE319K optional
-// Input: voice specifies which waveform to play
-//           Pointer to wave table
-// Output: none
-void Sound_Voice(const uint8_t *voice){
-  // optional
-}
+
 // **************Sound_Off*********************
 // stop outputing to DAC
 // Output: none
@@ -93,16 +73,8 @@ void Sound_Off(void){
 	//clearing bit 1 of control register to turn off interrupts
 	NVIC_ST_CTRL_R = 0;
 }
-// **************Sound_GetVoice*********************
-// Read the current voice
-// EE319K optional
-// Input: 
-// Output: voice specifies which waveform to play
-//           Pointer to current wavetable
-const uint8_t *Sound_GetVoice(void){
-  // if needed
-  return 0; // replace
-}
+
+
 #define PF4 (*((volatile uint32_t *)0x40025040))
 #define PF3 (*((volatile uint32_t *)0x40025020))
 #define PF2 (*((volatile uint32_t *)0x40025010))
@@ -112,10 +84,6 @@ const uint8_t *Sound_GetVoice(void){
 // Interrupt service routine
 // Executed every 12.5ns*(period)
 void SysTick_Handler(void){
-	DAC_Out(SinWave[sinIdx]);
-	sinIdx += 1;
-	if(sinIdx == 63){
-		sinIdx = 0;
-	}	
+	GPIO_PORTB_DATA_R ^= 0x02;
 }
 
