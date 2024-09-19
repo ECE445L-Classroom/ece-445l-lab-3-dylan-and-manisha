@@ -1,7 +1,3 @@
-
-
-// positive logic switch connected to PD5
-
 #define GPIO_PORTD_DATA_R       (*((volatile unsigned long *)0x400073FC))
 #define GPIO_PORTD_DIR_R        (*((volatile unsigned long *)0x40007400))
 #define GPIO_PORTD_AFSEL_R      (*((volatile unsigned long *)0x40007420))
