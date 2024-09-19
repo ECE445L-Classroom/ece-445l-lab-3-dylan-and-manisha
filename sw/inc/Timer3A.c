@@ -48,6 +48,11 @@ void Timer3A_Init(void(*task)(void), uint32_t period, uint32_t priority){
   TIMER3_CTL_R = 0x00000001;    // 10) enable TIMER3A
 }
 
+void Timer3A_Start(uint32_t period){
+    TIMER3_CTL_R |= TIMER_CTL_TAEN;       // 10) enable timer4A
+    TIMER3_TAILR_R = period-1;    // 4) reload value
+}
+
 void Timer3A_Handler(void){
   TIMER3_ICR_R = TIMER_ICR_TATOCINT;// acknowledge TIMER3A timeout
   (*PeriodicTask3)();                // execute user task
