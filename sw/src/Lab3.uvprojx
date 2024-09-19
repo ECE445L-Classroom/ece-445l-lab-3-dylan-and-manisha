@@ -504,6 +504,11 @@
               <FileType>1</FileType>
               <FilePath>.\Timer5A.c</FilePath>
             </File>
+            <File>
+              <FileName>Switches.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Switches.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

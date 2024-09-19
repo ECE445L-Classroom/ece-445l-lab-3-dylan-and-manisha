@@ -1,0 +1,1 @@
+void Switch_Init( void(*RED_Handler)() , void(*BLUE_Handler)(), void(*GREEN_Handler)(), void(*YELLOW_Handler)());

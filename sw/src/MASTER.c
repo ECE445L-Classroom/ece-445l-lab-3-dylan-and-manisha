@@ -2,6 +2,7 @@
 #include "../inc/Timer0A.h"
 #include "../inc/Timer2A.h"
 #include "../inc/Timer5A.h"
+#include "Switches.h"
 #include "MASTER.h"
 #include "../inc/ST7735.h"
 
@@ -66,7 +67,10 @@ void TickTock_INIT(){
 	// set default time to 00:00:00
 	curr_time[HH] = 0; curr_time[MM] = 0; curr_time[SS] = 0;
 
-	// Dedicate Timer0A to one second time increments "tick tock"
+	// Dedicate Timer5A to one second time increments "tick tock"
 	Timer5A_Init(&TickTock_ISR, 80000000, 3); // 80 MHz / 80,000,000 = 1 Hz = 1 second increments
+	
+	// Dedicate Timer2A to button controls
+	//Switch_Init(  )
 
 }
