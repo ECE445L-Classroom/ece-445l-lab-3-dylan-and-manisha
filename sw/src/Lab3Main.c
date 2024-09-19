@@ -51,10 +51,10 @@ int main(void){
 	GPIO_PORTB_DIR_R |= 0x02;
 	GPIO_PORTB_DEN_R |= 0x02;
 	
+	
 	//Timer0A_Init(&UserTask, 181818, 1); // task, period, priority --> 440Hz --> 80MHz / 181818
 	TickTock_INIT();
   EnableInterrupts();
-	
 	
   while(1){		
 		WaitForInterrupt();

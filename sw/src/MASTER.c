@@ -26,6 +26,11 @@ uint8_t ringAlarm;
 #define YELLOW 2
 #define GREEN 3
 
+void buttonHandler(){
+	ST7735_SetCursor(3, 3);
+	ST7735_OutUDec(69);
+}
+
 void setAlarmTime(){
 	// if they press respective button for H,M --> will change the alarm time they want to set
 	if(GPIO_PORTC_DATA_R == 1<<BLUE){ //
@@ -71,6 +76,7 @@ void TickTock_INIT(){
 
 	// Dedicate Timer5A to one second time increments "tick tock"
 	Timer5A_Init(&TickTock_ISR, 80000000, 3); // 80 MHz / 80,000,000 = 1 Hz = 1 second increments
+	Switch_Init(&buttonHandler);
 	
 	// Dedicate button controls
 	// -- PAGES -- 
@@ -95,7 +101,7 @@ void TickTock_INIT(){
 	// - blue: go back to main
 	// - yellow: go back to main
 	// - green: go back to main
-		
+	//Switch_Init( &buttonHandler );	
 	
 
 }

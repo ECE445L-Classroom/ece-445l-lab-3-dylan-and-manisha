@@ -2,24 +2,38 @@
 #include "../inc/tm4c123gh6pm.h"
 #include "Switches.h"
 
-void (*HandlerRED)(void);
-void (*HandlerBLUE)(void);
-void (*HandlerGREEN)(void);
-void (*HandlerYELLOW)(void);
+void (*ButtonHandler)(void);
 
-// PC3-0 ARE INITIALIZED AS INPUT POS. LOGIC SWITCHES
-// 0x0F
-void Switch_Init( void(*RED_Handler)() , void(*BLUE_Handler)(), void(*GREEN_Handler)(), void(*YELLOW_Handler)()){ 
+// PC7-4 ARE INITIALIZED AS INPUT POS. LOGIC SWITCHES
+// 0xF0
+void Switch_Init( void(*Handler)(void) ){ 
 	volatile unsigned long delay;
-  SYSCTL_RCGC2_R |= 0x00000008;  // 1) activate clock for Port D
+  SYSCTL_RCGCGPIO_R |= 0x00000004;  // 1) activate clock for Port C
   delay = SYSCTL_RCGC2_R;        // allow time for clock to settle
-  GPIO_PORTD_DIR_R &= ~0x0F;     // 2) set direction register
-  GPIO_PORTD_AFSEL_R &= ~0x0F;   // 3) regular port function
-  GPIO_PORTD_DEN_R |= 0x0F;      // 4) enable digital port
+  GPIO_PORTC_DIR_R &= ~0xF0;     // 2) set direction register
+  GPIO_PORTC_AFSEL_R &= ~0xF0;   // 3) regular port function
+  GPIO_PORTC_DEN_R |= 0xF0;      // 4) enable digital port
+	
+	GPIO_PORTC_IS_R &= ~0xF0;	// make PE0-3 edge sensitive
+	GPIO_PORTC_IBE_R &= ~0xF0;	// not both edges
+	GPIO_PORTC_IEV_R &= ~0xF0;	// falling edge triggered
+	GPIO_PORTC_PUR_R |= 0xF0;	// enable pull up resistors
+	GPIO_PORTC_ICR_R = 0xF0;	// clear flag 0-3
+	GPIO_PORTC_IM_R |= 0xF0;	// arm interrupt on PE0-3
+	NVIC_PRI0_R = (NVIC_PRI0_R& ~NVIC_PRI0_INT2_M)| (0x6 << NVIC_PRI0_INT2_S);   // priority 6
+	NVIC_EN0_R |= 0x1 << 2;	// enable NVIC
+	ButtonHandler = Handler;
 }
 
 
 void GPIOPortC_Handler(void){
-    GPIO_PORTC_ICR_R = 0xF0;   // clear flag
-    (*HandlerRED)(); // execute user function
+	ST7735_SetCursor(0, 0);
+	ST7735_OutUDec(69);
+	
+	GPIO_PORTC_ICR_R = 0xF0;   // clear flag
+	(*ButtonHandler)(); // execute user function
+	
+	
+	ST7735_SetCursor(2, 2);
+	ST7735_OutUDec(88);
 }

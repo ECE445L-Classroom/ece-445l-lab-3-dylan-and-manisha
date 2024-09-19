@@ -1,1 +1,2 @@
-void Switch_Init( void(*RED_Handler)() , void(*BLUE_Handler)(), void(*GREEN_Handler)(), void(*YELLOW_Handler)());
+void GPIOPortC_Handler(void);
+void Switch_Init( void(*Handler)(void) );
