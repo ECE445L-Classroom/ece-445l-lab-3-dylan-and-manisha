@@ -67,6 +67,6 @@ void TickTock_INIT(){
 	curr_time[HH] = 0; curr_time[MM] = 0; curr_time[SS] = 0;
 
 	// Dedicate Timer0A to one second time increments "tick tock"
-	Timer0A_Init(&TickTock_ISR, 80000000, 3); // 80 MHz / 80,000,000 = 1 Hz = 1 second increments
+	Timer5A_Init(&TickTock_ISR, 80000000, 3); // 80 MHz / 80,000,000 = 1 Hz = 1 second increments
 
 }
