@@ -2,7 +2,10 @@
 #include "../inc/tm4c123gh6pm.h"
 #include "Switches.h"
 
-void (*HandlerC)(void);
+void (*HandlerRED)(void);
+void (*HandlerBLUE)(void);
+void (*HandlerGREEN)(void);
+void (*HandlerYELLOW)(void);
 
 // PC3-0 ARE INITIALIZED AS INPUT POS. LOGIC SWITCHES
 // 0x0F
@@ -18,5 +21,5 @@ void Switch_Init( void(*RED_Handler)() , void(*BLUE_Handler)(), void(*GREEN_Hand
 
 void GPIOPortC_Handler(void){
     GPIO_PORTC_ICR_R = 0xF0;   // clear flag
-    (*HandlerC)(); // execute user function
+    (*HandlerRED)(); // execute user function
 }

@@ -16,25 +16,27 @@ uint8_t ringAlarm;
 #define MM 1
 #define SS 2
 
-#define HOME 0
-#define SET_ALARM 1
-#define WAKE_UP 2
+#define MAIN_CLOCK 0
+#define SOUND_SELECT 1
+#define ALARM_SELECT 2
+#define ALARM_RINGING 3
+
+#define RED 0
+#define BLUE 1
+#define YELLOW 2
+#define GREEN 3
 
 void setAlarmTime(){
-	if (page == SET_ALARM) {
-		// if they press respective button for H,M,S --> will change the alarm time they want to set
-		if(GPIO_PORTC_DATA_R == 1<<HH){ 
-			while(GPIO_PORTC_DATA_R == 1<<HH){} // wait for button release
-			set_time[HH]++;	
-		}
-		if(GPIO_PORTC_DATA_R == 1<<MM){
-			while(GPIO_PORTC_DATA_R == 1<<MM){} // wait for button release
-			set_time[MM]++;
-		}
-		if(GPIO_PORTC_DATA_R == 1<<SS){
-			while(GPIO_PORTC_DATA_R == 1<<SS){} // wait for button release
-			set_time[SS]++;
-		}
+	// if they press respective button for H,M --> will change the alarm time they want to set
+	if(GPIO_PORTC_DATA_R == 1<<BLUE){ //
+		while(GPIO_PORTC_DATA_R == 1<<BLUE){} // wait for button release
+		set_time[HH]++;
+		if (set_time[HH] >= 24) set_time[HH] %= 24; // cycle HH select
+	}
+	if(GPIO_PORTC_DATA_R == 1<<YELLOW){ // 
+		while(GPIO_PORTC_DATA_R == 1<<YELLOW){} // wait for button release
+		set_time[MM]++;
+		if (set_time[MM] >= 60) set_time[MM] %= 60; // cycle HH select
 	}
 }
 
@@ -56,7 +58,7 @@ void TickTock_ISR(){
 	// run curr time against set time
 	if (curr_time[HH] == set_time[HH] && curr_time[MM] == set_time[MM] && curr_time[SS] == set_time[SS]) {
 		ringAlarm = 1;
-		page = WAKE_UP;
+		page = ALARM_RINGING;
 	}
 	
 	ST7735_SetCursor(0, 0);
@@ -70,7 +72,30 @@ void TickTock_INIT(){
 	// Dedicate Timer5A to one second time increments "tick tock"
 	Timer5A_Init(&TickTock_ISR, 80000000, 3); // 80 MHz / 80,000,000 = 1 Hz = 1 second increments
 	
-	// Dedicate Timer2A to button controls
-	//Switch_Init(  )
+	// Dedicate button controls
+	// -- PAGES -- 
+	// *main clock*
+	// - red: toggle between Military (24-hr) and Standard (12-hr AM/PM) time
+	// - green: easter egg sprite @-@
+	
+	// *sound select*
+	// - red: abandon changes
+	// - blue: cycle upwards
+	// - yellow: cycle downwards
+	// - green: save changes & return to main
+	
+	// *alarm time select* ("back home" , "HH", "MM", "SS", "set alarm")
+	// - red: cycle left
+	// - blue: cycle HH upward from 00
+	// - yellow: cycle MM upward from 00
+	// - green: cycle right
+	
+	// *alarm ringing*
+	// - red: go back to main
+	// - blue: go back to main
+	// - yellow: go back to main
+	// - green: go back to main
+		
+	
 
 }
